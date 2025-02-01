@@ -21,7 +21,7 @@ def submit():
     if not data or not isinstance(data, list):
         return jsonify({"error (submit)": "Données invalides"}), 400
 
-    conn = sqlite3.connect("backend/database.db")
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     cursor.executemany("INSERT OR IGNORE INTO presences (nom) VALUES (?)", [(nom,) for nom in data])
@@ -35,7 +35,7 @@ def submit():
 # Récupère la liste des membres du club (pour le front-end)
 @app.route("/members", methods=["GET"])
 def get_members():
-    conn = sqlite3.connect("backend/database.db")
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     cursor.execute("SELECT nom FROM membres")
     members = [row[0] for row in cursor.fetchall()]
@@ -49,7 +49,7 @@ def add_members():
     if not data:
         return jsonify({"error (add_members)": "Données invalides"}), 400
 
-    conn = sqlite3.connect("backend/database.db")
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     cursor.executemany("INSERT OR IGNORE INTO membres (nom) VALUES (?)", [(nom,) for nom in data])
@@ -65,7 +65,7 @@ def delete_member():
     if not data:
         return jsonify({"error (delete_member)": "Données invalides"}), 400
 
-    conn = sqlite3.connect("backend/database.db")
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     cursor.executemany("DELETE FROM membres WHERE nom = ?", [(nom,) for nom in data])
@@ -81,7 +81,7 @@ def delete_member():
 # recupere la liste des presences (pour le front-end)
 @app.route("/presences", methods=["GET"])
 def get_presences():
-    conn = sqlite3.connect("backend/database.db")
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     cursor.execute("SELECT nom FROM presences")
     presences = [row[0] for row in cursor.fetchall()]
@@ -94,7 +94,7 @@ def delete_presence():
     if not data:
         return jsonify({"error (delete_presence)": "Données invalides"}), 400
 
-    conn = sqlite3.connect("backend/database.db")
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     cursor.executemany("DELETE FROM presences WHERE nom = ?", [(nom,) for nom in data])
