@@ -14,7 +14,7 @@ function getMembers(){
     const membersList = document.getElementById("members-list");
 
     
-    fetch("http://127.0.0.1:5000/members")
+    fetch("https://attendance-management-wxwf.onrender.com/members")
         .then(response => response.json())  
         .then(data => {
             console.log("Membres récupérés :", data); 
@@ -55,7 +55,7 @@ submitButton.addEventListener("click", () => {
         selectedMembers.push(member.value); // Ajouter le nom au tableau
     });
 
-    fetch("http://127.0.0.1:5000/submit", {
+    fetch("https://attendance-management-wxwf.onrender.com/submit", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -78,7 +78,7 @@ addMemberButton.addEventListener("click", () => {
     newMembers = [newMember];
     console.log("Nouveau membre :", newMembers);
 
-    fetch("http://127.0.0.1:5000/add_members", {
+    fetch("https://attendance-management-wxwf.onrender.com/add_members", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -109,7 +109,7 @@ deleteMemberButton.addEventListener("click", () => {
         selectedMembers.push(member.value);
     });
 
-    fetch("http://127.0.0.1:5000/delete_members", {
+    fetch("https://attendance-management-wxwf.onrender.com/delete_members", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -129,7 +129,7 @@ deleteMemberButton.addEventListener("click", () => {
 
 // Fonction pour récupérer les membres présents
 function getPresence() {
-    fetch("http://127.0.0.1:5000/presences")
+    fetch("https://attendance-management-wxwf.onrender.com/presences")  
         .then(response => response.json())
         .then(data => {
             console.log("Présence :", data);
@@ -168,7 +168,7 @@ deletePresenceButton.addEventListener("click", () => {
         selectedMembers.push(member.value);
     });
 
-    fetch("http://127.0.0.1:5000/delete_presences", {
+    fetch("https://attendance-management-wxwf.onrender.com/delete_presences", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

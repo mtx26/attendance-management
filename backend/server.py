@@ -1,11 +1,16 @@
 import flask
 from flask_cors import CORS
 import sqlite3
-from flask import jsonify
+from flask import jsonify, render_template
 import os
-
 app = flask.Flask(__name__)
 CORS(app)
+
+# Affiche la page d'accueil
+@app.route("/")
+def home():
+    return render_template("frontend\index.html")
+
 
 # Enregistre les présences des membres
 @app.route('/submit' , methods=['POST'])
