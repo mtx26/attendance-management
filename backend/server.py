@@ -2,6 +2,7 @@ import flask
 from flask_cors import CORS
 import sqlite3
 from flask import jsonify
+import os
 
 app = flask.Flask(__name__)
 CORS(app)
@@ -98,5 +99,7 @@ def delete_presence():
 
     return jsonify({"message (delete_presence)": "Présence supprimée pour " + ", ".join(data) + "!"}), 200
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
