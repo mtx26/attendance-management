@@ -1,7 +1,7 @@
 import sqlite3  # Importation du module SQLite intégré à Python
 
 # 1️⃣ Connexion à la base de données (ou création si elle n'existe pas)
-conn = sqlite3.connect("backend/database.db")
+conn = sqlite3.connect("database.db")
 cursor = conn.cursor()  # Création d'un objet "curseur" pour exécuter des requêtes SQL
 
 # 2️⃣ Création de la table "presences" si elle n'existe pas déjà

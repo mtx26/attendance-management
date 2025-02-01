@@ -9,7 +9,7 @@ CORS(app)
 # Affiche la page d'accueil
 @app.route("/")
 def home():
-    return render_template("frontend\index.html")
+    return render_template("frontend/index.html")
 
 
 # Enregistre les présences des membres
