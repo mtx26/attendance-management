@@ -9,6 +9,7 @@ const deleteMemberButton = document.getElementById("delete-member-button");
 const deletePresenceButton = document.getElementById("delete-presence-button");
 const deleteMembersList = document.getElementById("delete-members-list");
 const RestoreMemberButton = document.getElementById("restore-member-button");
+const BirthdaysInput = document.getElementById("birthdays-input");
 
 setInterval(getPresence, 60000);
 setInterval(getMembers, 60000);
@@ -107,24 +108,35 @@ function getPresence() {
 // Ajoute un membre
 addMemberButton.addEventListener("click", () => {
     const newMember = memberInput.value.trim();
-    if (!newMember) {
-        alert("Veuillez entrer un nom de membre valide.");
+    const birthdays = BirthdaysInput.value.trim();
+    if (!newMember || !birthdays) {
+        alert("Veuillez entrer un nom et une date valide.");
         return;
     }
-
+    
+    const requestData = { members: [{ nom: newMember, birthday: birthdays }] };
+    console.log("Données envoyées :", JSON.stringify(requestData));  // Debug
+    
     fetch(`/add_members`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ member: [newMember] })
+        body: JSON.stringify(requestData)
     })
         .then(response => response.json())
         .then(data => {
-            logSuccess("Ajout de membre", data);
-            getMembers();
+            console.log("Réponse du serveur :", data);  // Debug
+            if (data.error) {
+                logError("addMember", data.error);
+            } else {
+                logSuccess("Ajout de membre", data);
+                getMembers();
+            }
         })
         .catch(error => logError("addMember", error));
-
+    
     memberInput.value = "";
+    BirthdaysInput.value = "";
+    
 });
 
 // Ajoute les membres présents
@@ -177,7 +189,7 @@ deleteMemberButton.addEventListener("click", () => {
         .catch(error => logError("deleteMembers", error));
 });
 
-// Supprime les présences
+// Supprime des présences
 deletePresenceButton.addEventListener("click", () => {
     if (!window.confirm("Voulez-vous vraiment supprimer la présence des membres sélectionnés ?")) return;
 
@@ -202,9 +214,9 @@ deletePresenceButton.addEventListener("click", () => {
         .catch(error => logError("deletePresence", error));
 });
 
-// Récupère les membres supprimés
+// Supprimé des membres
 function getDeletedMembers() {
-    fetch(`/deleted_members`)
+    fetch(`/get_deleted_members`)
         .then(response => {
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             return response.json();
@@ -240,7 +252,7 @@ function getDeletedMembers() {
         .catch(error => logError("getDeletedMembers", error));
 }
 
-
+// Restaure des membres
 RestoreMemberButton.addEventListener("click", () => {
     if (!window.confirm("Voulez-vous vraiment restaurer les membres sélectionnés ?")) return;
 

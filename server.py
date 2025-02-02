@@ -17,6 +17,7 @@ app.secret_key = "secret_key"  # Clé secrète pour la gestion des sessions
 def home():
     return render_template("index.html")
 
+# Inscription
 @app.route("/register", methods=["GET", "POST"])
 def register():
     print(session)
@@ -24,7 +25,7 @@ def register():
         if request.method == "POST":
             username = request.form.get("username")
             password = request.form.get("password")
-            is_admin = 1 if "user" in session and session.get("is_admin") else 0  # Seul un admin peut créer un autre admin
+            is_admin = 1
 
             if not username or not password:
                 return render_template("register.html", error="Tous les champs sont obligatoires.")
@@ -69,7 +70,7 @@ def login():
 
         return jsonify({"error": "Identifiants incorrects"}), 401  # JSON en cas d'erreur
 
-
+# Deconnexion
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
     session.pop("user", None)
@@ -108,18 +109,29 @@ def get_members():
 # Ajoute les nouveaux membres à la base de données
 @app.route("/add_members", methods=["POST"])
 def add_members():
-    data = flask.request.json.get("member", [])
-    if not data:
+    data = flask.request.json.get("members", [])  # Correspond à la clé "members"
+    print(data)
+
+    if not data or not isinstance(data, list):
         return jsonify({"error (add_members)": "Données invalides"}), 400
 
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
-    cursor.executemany("INSERT OR IGNORE INTO membres (nom) VALUES (?)", [(nom,) for nom in data])
+    # Correction : s'assurer que data contient bien des dictionnaires avec 'nom' et 'birthday'
+    try:
+        cursor.executemany(
+            "INSERT OR IGNORE INTO membres (nom, birthday) VALUES (?, ?)",
+            [(member["nom"].title(), member["birthday"]) for member in data]
+        )
+    except KeyError:
+        return jsonify({"error": "Format de données incorrect"}), 400
+
     conn.commit()
     conn.close()
 
-    return jsonify({"message (add_members)": " " + ", ".join(data) + " est ajoutés !"}), 200
+    return jsonify({"message (add_members)": ", ".join([member["nom"] for member in data]) + " a été ajouté !"}), 200
+
 
 # Supprime un membre de la base de données
 @app.route("/delete_members", methods=["POST"])
@@ -139,7 +151,6 @@ def delete_member():
     conn.close()
 
     return jsonify({"message (delete_member)": "Membres " + ", ".join(data) + " supprimés !"}), 200
-
 
 # recupere la liste des presences (pour le front-end)
 @app.route("/presences", methods=["GET"])
@@ -167,18 +178,22 @@ def delete_presence():
 
     return jsonify({"message (delete_presence)": "Présence supprimée pour " + ", ".join(data) + "!"}), 200
 
-@app.route("/deleted_members", methods=["GET"])
+# Recupere la liste des membres supprimés (pour le front-end)
+@app.route("/get_deleted_members", methods=["GET"])
 def get_deleted_members():
-    if "user" in session or session.get("is_admin"):
+    if "user" in session and session.get("is_admin"):
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
         cursor.execute("SELECT nom FROM delete_members")
         deleted_members = [row[0] for row in cursor.fetchall()]
+        conn.close()
+        if not deleted_members:
+            return jsonify([])
         return jsonify(deleted_members)
     else:
         return redirect("/")
 
-# Remettre un membre dans la liste des membres
+# Restoré un membre
 @app.route("/restore_members", methods=["POST"])
 def restore_member():
     data = flask.request.json.get("members", [])
@@ -195,7 +210,34 @@ def restore_member():
     conn.close()
 
     return jsonify({"message (restore_member)": " " + ", ".join(data) + " a été remis !"}), 200
+
+# Recupere la liste des anniversaires
+@app.route("/get_birthdays", methods=["GET"])
+def get_birthdays():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
     
+    cursor.execute("SELECT nom, birthday FROM membres")
+    birthdays = cursor.fetchall()  # Liste de tuples (nom, birthday)
+    
+    conn.close()
+
+    # Transformer les dates pour le bon format
+    birthday_list = [
+        {
+            "nom": nom,
+            "birthday": birthday  # Stocké en YYYY-MM-DD, déjà utilisable
+        }
+        for nom, birthday in birthdays
+    ]
+
+    return jsonify(birthday_list)
+
+
+@app.route("/birthdays", methods=["GET"])
+def birthdays():
+    return render_template("birthdays.html")
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

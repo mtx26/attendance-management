@@ -1,5 +1,6 @@
 import sqlite3  # Importation du module SQLite intégré à Python
 from werkzeug.security import generate_password_hash
+import os
 
 # 1️⃣ Connexion à la base de données (ou création si elle n'existe pas)
 conn = sqlite3.connect("database.db")
@@ -13,21 +14,30 @@ cursor.execute('''
         date TEXT DEFAULT CURRENT_TIMESTAMP         -- Date d'enregistrement (par défaut : aujourd'hui)
     )
 ''')
+
+# 2️⃣ Création de la table "membres" si elle n'existe pas déjà
 cursor.execute("DROP TABLE IF EXISTS membres")
 
 cursor.execute('''
     CREATE TABLE membres (
         id INTEGER PRIMARY KEY AUTOINCREMENT,   
         nom TEXT NOT NULL UNIQUE,
+        birthday TEXT,
         date TEXT DEFAULT CURRENT_TIMESTAMP
     )
 ''')
 
+# Lire les membres depuis le fichier et diviser en nom et date si disponible
 with open("backend/members.txt", "r") as f:
-    membres_defaut = [(line.strip(),) for line in f.readlines()]  # Convertir en tuple
+    lignes = [line.strip() for line in f.readlines()]  # Liste de chaînes sans espace inutile
 
-cursor.executemany("INSERT INTO membres (nom) VALUES (?)", membres_defaut)
+    # Gérer les cas où certaines lignes n'ont pas de date
+    data = [(line.split(":", 1)[0].strip(), line.split(":", 1)[1].strip() if ":" in line else None) for line in lignes]
 
+# Insérer dans la base de données (NULL si pas de date)
+cursor.executemany("INSERT INTO membres (nom, birthday) VALUES (?, ?)", data)
+
+# 2️⃣ Création de la table "delete_members" si elle n'existe pas déjà
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS delete_members (
         id INTEGER PRIMARY KEY AUTOINCREMENT,  -- ID unique qui s'incrémente automatiquement
@@ -36,6 +46,9 @@ cursor.execute('''
     )
 ''')
 
+
+
+# 2️⃣ Création de la table "users" si elle n'existe pas deja
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

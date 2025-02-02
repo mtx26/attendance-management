@@ -1,8 +1,137 @@
 .scrollable-list {
-    max-height: 300px;
-    overflow-y: auto;
+    overflow-y: auto; /* Active le scrolling ici UNIQUEMENT */
     border: 1px solid #dee2e6;
     border-radius: 5px;
     padding: 10px;
     background-color: #ffffff;
+    max-height: 280px; /* Ajuste la hauteur pour que le scrolling commence plus tôt */
+    padding-right: 5px; /* Ajoute un petit padding à droite pour l'esthétique */
+}
+
+.grid-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Colonnes flexibles */
+    gap: 10px; /* Espacement entre les colonnes */
+    padding: 0;
+    list-style: none;
+    /* Suppression du scrolling et de la hauteur fixe */
+    max-height: unset; 
+    overflow-y: unset; 
+}
+
+.grid-list .list-group-item {
+    display: flex;
+    align-items: center; /* Aligne verticalement */
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left; /* Alignement du texte à gauche */
+    justify-content: flex-start; /* Alignement des noms sur la gauche */
+    width: 100%; /* Évite l'expansion des éléments */
+}
+
+.btn-primary { background-color: #1E3A8A; border-color: #1E3A8A; }
+.btn-primary:hover { background-color: #162B6F; border-color: #162B6A; }
+
+.btn-secondary { background-color: #6C757D; border-color: #6C757D; }
+.btn-secondary:hover { background-color: #5A6268; border-color: #5A6268; }
+
+.btn-danger { background-color: #DC3545; border-color: #DC3545; }
+.btn-danger:hover { background-color: #C82333; border-color: #C82333; }
+
+.login-container {
+    max-width: 500px;
+    margin: auto;
+    padding: 25px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grid-list .list-group-item {
+    padding: 0;
+    padding-left: 6px;
+}
+#calendar-container, #list-container {
+    max-width: 100%;
+    margin: auto;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+#calendar {
+    width: 100%;
+}
+
+.fc-toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #1E3A8A;
+}
+
+input:checked + .slider:before {
+    transform: translateX(14px);
+}
+.fc-toolbar-chunk {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Ajoute un espacement entre les boutons */
+}
+
+.fc-toolbar-title {
+    text-align: center;
+    flex-grow: 1; /* Permet au titre de s'adapter sans forcer la mise en page */
+}
+
+@media (max-width: 992px) { /* Ajustement pour les écrans plus petits */
+    
+}
+
+@media (max-width: 768px) {
+    .d-md-flex {
+        display: none !important;
+    }
 }
