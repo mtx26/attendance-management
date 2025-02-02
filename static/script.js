@@ -14,7 +14,7 @@ function getMembers(){
     const membersList = document.getElementById("members-list");
 
     
-    fetch("http://141.95.86.119/members")
+    fetch("https://vps-3b8e2908.vps.ovh.net/members")
         .then(response => response.json())  
         .then(data => {
             console.log("Membres récupérés :", data); 
@@ -55,7 +55,7 @@ submitButton.addEventListener("click", () => {
         selectedMembers.push(member.value); // Ajouter le nom au tableau
     });
 
-    fetch("http://141.95.86.119/submit", {
+    fetch("https://vps-3b8e2908.vps.ovh.net/submit", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -78,7 +78,7 @@ addMemberButton.addEventListener("click", () => {
     newMembers = [newMember];
     console.log("Nouveau membre :", newMembers);
 
-    fetch("http://141.95.86.119/add_members", {
+    fetch("https://vps-3b8e2908.vps.ovh.net/add_members", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -109,7 +109,7 @@ deleteMemberButton.addEventListener("click", () => {
         selectedMembers.push(member.value);
     });
 
-    fetch("http://141.95.86.119/delete_members", {
+    fetch("https://vps-3b8e2908.vps.ovh.net/delete_members", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -129,7 +129,7 @@ deleteMemberButton.addEventListener("click", () => {
 
 // Fonction pour récupérer les membres présents
 function getPresence() {
-    fetch("http://141.95.86.119/presences")  
+    fetch("https://vps-3b8e2908.vps.ovh.net/presences")  
         .then(response => response.json())
         .then(data => {
             console.log("Présence :", data);
@@ -168,7 +168,7 @@ deletePresenceButton.addEventListener("click", () => {
         selectedMembers.push(member.value);
     });
 
-    fetch("http://141.95.86.119/delete_presences", {
+    fetch("https://vps-3b8e2908.vps.ovh.net/delete_presences", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
