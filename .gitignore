@@ -1,0 +1,6 @@
+# Ignorer les fichiers sensibles et inutiles
+.env
+__pycache__/
+venv/
+node_modules/
+.DS_Store

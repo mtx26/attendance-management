@@ -2,25 +2,92 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8" />
-        <link rel="icon" href="data:image/png;base64,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" />
+        <link rel="icon" href="/static/icon.png">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Club Clermont</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/style.css">
+        <style>
+            .btn-primary { background-color: #1E3A8A; border-color: #1E3A8A; }
+            .btn-primary:hover { background-color: #162B6F; border-color: #162B6A; }
+            
+            .btn-secondary { background-color: #6C757D; border-color: #6C757D; }
+            .btn-secondary:hover { background-color: #5A6268; border-color: #5A6268; }
+            
+            .btn-danger { background-color: #DC3545; border-color: #DC3545; }
+            .btn-danger:hover { background-color: #C82333; border-color: #C82333; }
+        </style>
     </head>
-    <body>
-        <h1>Gestion des Participants</h1>
-        <ul id="members-list"></ul>
-        <div>
-            <input id="member-input" type="text" placeholder="Nom du participant" />
-            <button id="add-member-button">Ajouter</button>
-        </div>
-        <button id="submit-button">Participe</button>
-        <button id="delete-member-button">Supprimer</button>
-        <div>
-            <h2>Membres présents ce samedi</h2>
-            <ul id="presence-list"></ul>
-            <button id="delete-presence-button">Supprimer</button>
+    <body class="bg-light">
+        <!-- Barre de connexion -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/">🏠 Accueil</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    {% if "user" in session %}
+                        <span class="navbar-text me-3 text-white">Connecté en tant que <span class="text-primary">{{ session["user"] }}</span></span>
+                        <a href="/logout" class="btn btn-danger">Se déconnecter</a>
+                    {% else %}
+                        <a href="/login" class="btn btn-primary">Se connecter</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+        <div class="container py-3">
+            <div class="row">
+                <!-- Gestion des membres -->
+                <div class="{% if 'user' in session and session['is_admin'] %}col-md-8{% else %}col-12{% endif %}">
+                    <div class="bg-white p-4 shadow rounded">
+                        <h1 class="text-primary mb-3">Gestion des Participants</h1>
+
+                        <div class="mt-4">
+                            <h2 class="text-primary">Liste des membres</h2>
+                            <div class="scrollable-list">
+                                <ul id="members-list" class="list-group"></ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 d-flex">
+                            <input id="member-input" type="text" placeholder="Nouveau participant" class="form-control me-2" />
+                            <button id="add-member-button" class="btn btn-primary">Ajouter</button>
+                        </div>
+
+                        <button id="submit-button" class="btn btn-secondary m-1">Participe</button>
+                        <button id="delete-member-button" class="btn btn-danger m-1">Supprimer</button>
+
+                        <div class="mt-4">
+                            <h2 class="text-primary">Membres présents ce samedi</h2>
+                            <div class="scrollable-list">
+                                <ul id="presence-list" class="list-group"></ul>
+                            </div>
+                            <button id="delete-presence-button" class="btn btn-danger mt-2">Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Admin (affichée uniquement si Admin) -->
+                {% if "user" in session and session["is_admin"] %}
+                <div class="col-md-4 mt-3 mt-md-0">
+                    <div class="bg-white p-4 shadow rounded">
+                        <h1 class="text-danger">Admin</h1>
+                        <a href="/register" class="btn btn-secondary my-2 w-100">S'inscrire</a>
+                        <div class="mt-4">
+                            <h2 class="text-secondary">Membres supprimés</h2>
+                            <div class="scrollable-list">
+                                <ul id="delete-members-list" class="list-group"></ul>
+                            </div>
+                            <button id="restore-member-button" class="btn btn-danger mt-2">Restaurer</button>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            </div>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/static/script.js"></script>
     </body>
 </html>
-<script src="/static/script.js"></script>
