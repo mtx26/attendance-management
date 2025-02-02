@@ -14,14 +14,26 @@ setInterval(getPresence, 60000);
 setInterval(getMembers, 60000);
 setInterval(getDeletedMembers, 60000);
 
-// Récupère la liste des membres
-function getMembers(){
-    const membersList = document.getElementById("members-list");
+// Fonction générique pour afficher les erreurs
+function logError(context, error) {
+    console.error(`[Erreur - ${context}]`, error);
+}
 
+// Fonction générique pour afficher les succès
+function logSuccess(context, message) {
+    console.log(`[Succès - ${context}]`, message);
+}
+
+// Récupère la liste des membres
+function getMembers() {
     fetch(`/members`)
-        .then(response => response.json())  
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        })
         .then(data => {
-            console.log("Membres récupérés :", data); 
+            logSuccess("Récupération des membres", data);
+            const membersList = document.getElementById("members-list");
             membersList.innerHTML = "";
 
             data.forEach(member => {
@@ -49,17 +61,18 @@ function getMembers(){
                 membersList.appendChild(li);
             });
         })
-        .catch(error => {
-            console.error("Erreur lors de la récupération des membres (members js):", error);
-        });
+        .catch(error => logError("getMembers", error));
 }
 
 // Récupère la liste des présences
 function getPresence() {
-    fetch(`/presences`)  
-        .then(response => response.json())
+    fetch(`/presences`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        })
         .then(data => {
-            console.log("Présence :", data);
+            logSuccess("Récupération des présences", data);
             const presenceList = document.getElementById("presence-list");
             presenceList.innerHTML = "";
 
@@ -88,117 +101,116 @@ function getPresence() {
                 presenceList.appendChild(li);
             });
         })
-        .catch(error => {
-            console.error("Error (presence js):", error);
-        });
+        .catch(error => logError("getPresence", error));
 }
 
 // Ajoute un membre
 addMemberButton.addEventListener("click", () => {
-    const newMember = memberInput.value;
-    newMembers = [newMember];
+    const newMember = memberInput.value.trim();
+    if (!newMember) {
+        alert("Veuillez entrer un nom de membre valide.");
+        return;
+    }
 
     fetch(`/add_members`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ member: newMembers })
+        body: JSON.stringify({ member: [newMember] })
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        getMembers();
-    })
-    .catch(error => {
-        console.error("Member addition error (add_members js):", error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            logSuccess("Ajout de membre", data);
+            getMembers();
+        })
+        .catch(error => logError("addMember", error));
 
     memberInput.value = "";
 });
 
 // Ajoute les membres présents
 submitButton.addEventListener("click", () => {
-    const checked = document.querySelectorAll("input[type='checkbox'][class~='member-checkbox']:checked");
-    const selectedMembers = [];
+    const checked = document.querySelectorAll(".member-checkbox:checked");
+    if (checked.length === 0) {
+        alert("Aucun membre sélectionné.");
+        return;
+    }
 
-    checked.forEach(member => {
-        selectedMembers.push(member.value);
-    });
+    const selectedMembers = Array.from(checked).map(member => member.value);
 
     fetch(`/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ members: selectedMembers })
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        getPresence();
-    })
-    .catch(error => {
-        console.error("Error (submit js):", error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            logSuccess("Ajout de présences", data);
+            getPresence();
+        })
+        .catch(error => logError("submitPresence", error));
 });
 
 // Supprime les membres sélectionnés
 deleteMemberButton.addEventListener("click", () => {
-    if(!window.confirm("Voulez-vous vraiment supprimer les membres sélectionnés ?")) return;
-    const checked = document.querySelectorAll("input[type='checkbox'][class~='member-checkbox']:checked");
-    const selectedMembers = [];
+    if (!window.confirm("Voulez-vous vraiment supprimer les membres sélectionnés ?")) return;
 
-    checked.forEach(member => {
-        selectedMembers.push(member.value);
-    });
+    const checked = document.querySelectorAll(".member-checkbox:checked");
+    if (checked.length === 0) {
+        alert("Aucun membre sélectionné.");
+        return;
+    }
+
+    const selectedMembers = Array.from(checked).map(member => member.value);
 
     fetch(`/delete_members`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ members: selectedMembers })
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        getMembers();
-        getPresence();
-        getDeletedMembers();
-    })
-    .catch(error => {
-        console.error("Error (delete_member js):", error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            logSuccess("Suppression de membres", data);
+            getMembers();
+            getPresence();
+            getDeletedMembers();
+        })
+        .catch(error => logError("deleteMembers", error));
 });
 
-// Supprime les membres présents
+// Supprime les présences
 deletePresenceButton.addEventListener("click", () => {
-    if(!window.confirm("Voulez-vous vraiment supprimer la présence des membres sélectionnés ?")) return;
-    const checked = document.querySelectorAll("input[type='checkbox'][class~='presence-checkbox']:checked");
-    const selectedMembers = [];
+    if (!window.confirm("Voulez-vous vraiment supprimer la présence des membres sélectionnés ?")) return;
 
-    checked.forEach(member => {
-        selectedMembers.push(member.value);
-    });
+    const checked = document.querySelectorAll(".presence-checkbox:checked");
+    if (checked.length === 0) {
+        alert("Aucun membre sélectionné.");
+        return;
+    }
+
+    const selectedMembers = Array.from(checked).map(member => member.value);
 
     fetch(`/delete_presences`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ members: selectedMembers })
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        getPresence();
-    })
-    .catch(error => {
-        console.error("Error (delete_presence js):", error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            logSuccess("Suppression de présences", data);
+            getPresence();
+        })
+        .catch(error => logError("deletePresence", error));
 });
 
 // Récupère les membres supprimés
-// Récupère les membres supprimés
 function getDeletedMembers() {
-    fetch(`/deleted_members`)  
-        .then(response => response.json())
+    fetch(`/deleted_members`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        })
         .then(data => {
-            console.log("Membres supprimés :", data);
-            const deleteMembersList = document.getElementById("delete-members-list");
+            logSuccess("Récupération des membres supprimés", data);
             deleteMembersList.innerHTML = "";
 
             data.forEach(member => {
@@ -225,20 +237,20 @@ function getDeletedMembers() {
                 deleteMembersList.appendChild(li);
             });
         })
-        .catch(error => {
-            console.error("Error (deleted_members js):", error);
-        });
+        .catch(error => logError("getDeletedMembers", error));
 }
 
 
 RestoreMemberButton.addEventListener("click", () => {
-    if(!window.confirm("Voulez-vous vraiment restaurer les membres sélectionnés ?")) return;
-    const checked = document.querySelectorAll("input[type='checkbox'][class~='delete-checkbox']:checked");
-    const selectedMembers = [];
+    if (!window.confirm("Voulez-vous vraiment restaurer les membres sélectionnés ?")) return;
 
-    checked.forEach(member => {
-        selectedMembers.push(member.value);
-    });
+    const checked = document.querySelectorAll(".delete-checkbox:checked");
+    if (checked.length === 0) {
+        alert("Aucun membre sélectionné pour la restauration.");
+        return;
+    }
+
+    const selectedMembers = Array.from(checked).map(member => member.value);
 
     fetch(`/restore_members`, {
         method: "POST",
@@ -246,14 +258,13 @@ RestoreMemberButton.addEventListener("click", () => {
         body: JSON.stringify({ members: selectedMembers })
     })
     .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
     })
     .then(data => {
-        console.log(data);
+        logSuccess("Restauration de membres", data);
         getMembers();
         getDeletedMembers();
     })
-    .catch(error => {
-        console.error("Error (restore_members js):", error);
-    });
+    .catch(error => logError("restoreMembers", error));
 });
