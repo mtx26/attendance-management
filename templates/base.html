@@ -5,30 +5,69 @@
     <link rel="icon" href="/static/icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Club Clermont{% endblock %}</title>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body class="bg-light">
     
-    <!-- Barre de navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">🏠 Accueil</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="/birthdays">🎂 Anniversaires</a>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">🏠 Accueil</a>
+            <a class="navbar-brand d-none d-lg-block" href="/birthdays">🎂 Anniversaires</a>
+    
+            <!-- Zone de droite -->
+            <div class="d-none d-lg-flex align-items-center ms-auto">
                 {% if "user" in session %}
-                    <span class="navbar-text me-3 text-white">Connecté en tant que <span class="text-primary">{{ session["user"] }}</span></span>
+                    <span class="navbar-text me-3 text-white">
+                        Connecté en tant que <span class="text-primary">{{ session["user"] }}</span>
+                    </span>
                     <a href="/logout" class="btn btn-danger">Se déconnecter</a>
                 {% else %}
                     <a href="/login" class="btn btn-primary">Se connecter</a>
                 {% endif %}
             </div>
+    
+            <!-- Bouton Offcanvas visible uniquement sur mobile -->
+            <button class="navbar-toggler d-lg-none ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvas" aria-controls="navbarOffcanvas">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
     </nav>
+    
+    <!-- Offcanvas pour mobile -->
+    <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="navbarOffcanvas" aria-labelledby="navbarOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="navbarOffcanvasLabel">Menu</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">🏠 Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/birthdays">🎂 Anniversaires</a>
+                </li>
+                <hr class="dropdown-divider">
+                {% if "user" in session %}
+                    <li class="nav-item">
+                        <span class="nav-link text-white">Connecté en tant que <span class="ms-2 text-primary">{{ session["user"] }}</span></span>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/logout" class="btn btn-danger w-100">Se déconnecter</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="/login" class="btn btn-primary w-100">Se connecter</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    
 
     <!-- Contenu des pages -->
     <div class="container py-3">

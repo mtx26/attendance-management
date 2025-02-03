@@ -3,35 +3,66 @@
 {% block title %}Accueil - Club Clermont{% endblock %}
 
 {% block content %}
-    <div class="row">
+
+    <div class="row container-index">
         <!-- Gestion des membres -->
-        <div class="{% if 'user' in session and session['is_admin'] %}col-md-8{% else %}col-md-8 offset-md-2{% endif %}">
+        <div class="{% if 'user' in session and session['is_admin'] %}col-md-8{% else %}col-md-10 offset-md-1{% endif %}">
             <div class="bg-white p-4 shadow rounded">
-                <h1 class="text-primary mb-3">Gestion des membres</h1>
+                <h1 class="text-primary mb-3">Gestion des membres du club</h1>
+
+                <div class="alert alert-info">
+                    <strong>Note :</strong> Ajoutez un membre en entrant son nom et sa date de naissance, puis cliquez sur <i>"Ajouter"</i>. 
+                    Cochez votre nom et cliquez sur <i>"Confirmer ma présence"</i> pour signaler votre participation à l'entraînement du samedi.
+                </div>
 
                 <div class="mt-4 mb-3">
-                    <h2 class="text-primary">Liste des membres</h2>
+                    <h2 class="text-primary">Membres inscrits</h2>
+                    <div class="form-floating mb-3">
+                        <input type="text" id="filter-name" class="form-control" placeholder="Rechercher un membre">    
+                        <label for="filter-name">Rechercher un membre</label>
+                    </div>
                     <div class="scrollable-list">
-                        <ul id="members-list" class="list-group grid-list"></ul>
+                        <ul id="members-list" class="list-group grid-list">
+                        </ul>
                     </div>
                 </div>
 
-                <div class="mb-3 d-flex">
-                    <input id="member-input" type="text" placeholder="Nouveau membre" class="form-control me-2" />
-                    <input type="date" id="birthdays-input" placeholder="Anniversaires" class="form-control me-2">
+                <div class="mb-3 d-flex flex-column gap-2 align-items-left">
+                    <div class="d-flex gap-2 input-group-responsive">
+                        <div class="form-floating w-100">
+                            <input id="member-input" type="text" class="form-control" placeholder="Nom du membre">
+                            <label for="member-input">Nom du membre</label>
+                        </div>
+                    
+                        <div class="form-floating w-100">
+                            <input type="date" id="birthdays-input" class="form-control" placeholder="Date de naissance">
+                            <label for="birthdays-input">Date de naissance</label>
+                        </div>
+                    </div>
 
-                    <button id="add-member-button" class="btn btn-primary">Ajouter</button>
+                    <button id="add-member-button" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Ajouter
+                    </button>
+                </div>
+                
+
+                <div class="d-flex flex-wrap gap-2">
+                    <button id="submit-button" class="btn btn-secondary">
+                        <i class="fas fa-check-circle"></i> Confirmer ma présence
+                    </button>
+                    <button id="delete-member-button" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Supprimer le membre sélectionné
+                    </button>
                 </div>
 
-                <button id="submit-button" class="btn btn-secondary m-1">Participe</button>
-                <button id="delete-member-button" class="btn btn-danger m-1">Supprimer</button>
-
                 <div class="mt-4">
-                    <h2 class="text-primary">Membres présents ce samedi</h2>
+                    <h2 class="text-primary">Participants à l'entraînement de samedi</h2>
                     <div class="scrollable-list">
                         <ul id="presence-list" class="list-group grid-list"></ul>
                     </div>
-                    <button id="delete-presence-button" class="btn btn-danger mt-2">Supprimer</button>
+                    <button id="delete-presence-button" class="btn btn-danger mt-2">
+                        <i class="fas fa-user-minus"></i> Supprimer
+                    </button>
                 </div>
             </div>
         </div>
@@ -39,18 +70,24 @@
         <!-- Section Admin (affichée uniquement si Admin) -->
         {% if "user" in session and session["is_admin"] %}
             <div class="col-md-4 mt-3 mt-md-0">
-                <div class="bg-white p-4 shadow rounded">
-                    <h1 class="text-danger">Admin</h1>
-                    <a href="/register" class="btn btn-secondary my-2 w-100">S'inscrire</a>
+                <div class="bg-light p-4 shadow rounded">
+                    <h1 class="text-danger">Admin <span class="badge bg-warning">Privé</span></h1>
+                    <a href="/register" class="btn btn-secondary my-2 w-100">
+                        <i class="fas fa-user-plus"></i> Inscrire un nouvel administrateur
+                    </a>
+
                     <div class="mt-4">
-                        <h2 class="text-secondary">Membres supprimés</h2>
+                        <h2 class="text-secondary">Historique des membres supprimés</h2>
                         <div class="scrollable-list">
                             <ul id="delete-members-list" class="list-group grid-list"></ul>
                         </div>
-                        <button id="restore-member-button" class="btn btn-danger mt-2">Restaurer</button>
+                        <button id="restore-member-button" class="btn btn-success mt-2">
+                            <i class="fas fa-undo"></i> Restaurer
+                        </button>
                     </div>
                 </div>
             </div>
         {% endif %}
     </div>
+
 {% endblock %}

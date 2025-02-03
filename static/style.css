@@ -1,34 +1,55 @@
-.scrollable-list {
-    overflow-y: auto; /* Active le scrolling ici UNIQUEMENT */
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #ffffff;
-    max-height: 280px; /* Ajuste la hauteur pour que le scrolling commence plus tôt */
-    padding-right: 5px; /* Ajoute un petit padding à droite pour l'esthétique */
+/* === GÉNÉRAL === */
+body {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    padding-top: 80px !important; /* Décalage pour la navbar fixe */
+    transition: background 0.3s, color 0.3s;
 }
 
-.grid-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Colonnes flexibles */
-    gap: 10px; /* Espacement entre les colonnes */
-    padding: 0;
-    list-style: none;
-    /* Suppression du scrolling et de la hauteur fixe */
-    max-height: unset; 
-    overflow-y: unset; 
+/* Conteneur principal */
+.container-index {
+    max-width: 1200px;
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
+}
+.container-login {
+    max-width: 800px;
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
 }
 
-.grid-list .list-group-item {
-    display: flex;
-    align-items: center; /* Aligne verticalement */
-    padding: 10px;
-    border-radius: 5px;
-    text-align: left; /* Alignement du texte à gauche */
-    justify-content: flex-start; /* Alignement des noms sur la gauche */
-    width: 100%; /* Évite l'expansion des éléments */
+/* === NAVBAR === */
+.navbar {
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(5px);
 }
 
+/* Effet au survol */
+.navbar a.navbar-brand:hover {
+    color: #ffcc00 !important;
+    transform: scale(1.05);
+    transition: 0.3s ease-in-out;
+}
+
+/* === BOUTONS === */
+.btn {
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* Personnalisation des boutons */
 .btn-primary { background-color: #1E3A8A; border-color: #1E3A8A; }
 .btn-primary:hover { background-color: #162B6F; border-color: #162B6A; }
 
@@ -38,19 +59,81 @@
 .btn-danger { background-color: #DC3545; border-color: #DC3545; }
 .btn-danger:hover { background-color: #C82333; border-color: #C82333; }
 
-.login-container {
-    max-width: 500px;
-    margin: auto;
-    padding: 25px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+/* === FORMULAIRES === */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select,
+textarea {
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+    width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* === LISTES === */
+.list-group-item {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+}
+
+.list-group-item:hover {
+    background: #e9ecef;
+    cursor: pointer;
+}
+
+/* === SCROLLABLE LISTE === */
+.scrollable-list {
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #ffffff;
+    max-height: 280px;
+    padding-right: 5px;
+}
+
+/* === GRILLE RESPONSIVE POUR LISTES === */
+.grid-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    padding: 0;
+    list-style: none;
+    max-height: unset;
+    overflow-y: unset;
+}
+
+.grid-list .list-group-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    justify-content: flex-start;
+    width: 100%;
 }
 
 .grid-list .list-group-item {
     padding: 0;
     padding-left: 6px;
 }
+
+/* === CALENDRIER === */
 #calendar-container, #list-container {
     max-width: 100%;
     margin: auto;
@@ -71,11 +154,24 @@
     align-items: center;
 }
 
+.fc-toolbar-chunk {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fc-toolbar-title {
+    text-align: center;
+    flex-grow: 1;
+}
+
+/* SWITCH MODE SOMBRE */
 .switch {
     position: relative;
     display: inline-block;
-    width: 34px;
-    height: 20px;
+    width: 40px;
+    height: 22px;
+    vertical-align: middle;
 }
 
 .switch input {
@@ -93,14 +189,14 @@
     bottom: 0;
     background-color: #ccc;
     transition: .4s;
-    border-radius: 20px;
+    border-radius: 22px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 14px;
-    width: 14px;
+    height: 16px;
+    width: 16px;
     left: 3px;
     bottom: 3px;
     background-color: white;
@@ -113,25 +209,64 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(14px);
-}
-.fc-toolbar-chunk {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Ajoute un espacement entre les boutons */
+    transform: translateX(18px);
 }
 
-.fc-toolbar-title {
-    text-align: center;
-    flex-grow: 1; /* Permet au titre de s'adapter sans forcer la mise en page */
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 992px) { /* Écrans de largeur inférieure à 992px */
+    .navbar-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start !important; /* Force l'alignement à gauche */
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .navbar-nav .nav-item {
+        width: 100%; /* Pour éviter les problèmes d'alignement */
+        display: flex;
+        justify-content: flex-start; /* Aligne les items à gauche */
+        margin-bottom: 8px;
+    }
+
+    .navbar-nav .btn {
+        width: auto; /* Garde une taille normale pour les boutons */
+        text-align: left; /* Alignement correct du texte */
+    }
+
+    .navbar-nav .text-white {
+        width: 100%;
+        text-align: left;
+        display: flex;
+        align-items: center;
+    }
+
+    .switch {
+        align-self: flex-start; /* Force l'alignement du switch mode sombre */
+    }
+
+    /* Correction de la navbar pour éviter le padding excessif */
+    .navbar {
+        padding: 10px 15px;
+    }
+
+    .container-index {
+        max-width: 100%; /* Augmente légèrement la largeur pour les tablettes */
+    }
 }
 
-@media (max-width: 992px) { /* Ajustement pour les écrans plus petits */
-    
-}
 
 @media (max-width: 768px) {
     .d-md-flex {
         display: none !important;
+    }
+    .container-index {
+        width: 100%; /* Utilise toute la largeur sur mobile */
+        padding: 15px;
+    }
+    .input-group-responsive {
+        flex-direction: column !important; /* Forcer l'affichage en colonne */
+        gap: 5px; /* Réduire l'espacement */
     }
 }

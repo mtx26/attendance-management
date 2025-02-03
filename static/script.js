@@ -25,7 +25,13 @@ function logSuccess(context, message) {
     console.log(`[Succès - ${context}]`, message);
 }
 
-// Récupère la liste des membres
+document.addEventListener("DOMContentLoaded", () => {
+    const filterInput = document.getElementById("filter-name");
+    if (filterInput) {
+        filterInput.addEventListener("input", getMembers);
+    }
+});
+
 function getMembers() {
     fetch(`/members`)
         .then(response => {
@@ -35,35 +41,71 @@ function getMembers() {
         .then(data => {
             logSuccess("Récupération des membres", data);
             const membersList = document.getElementById("members-list");
-            membersList.innerHTML = "";
+            const filterInput = document.getElementById("filter-name");
 
-            data.forEach(member => {
-                let li = document.createElement("li");
-                li.classList.add("list-group-item", "d-flex", "align-items-center");
+            function updateList() {
+                const filterValue = filterInput.value.toLowerCase(); // Récupère la valeur en minuscules
+                membersList.innerHTML = "";
 
-                let div = document.createElement("div");
-                div.classList.add("form-check");
+                const filteredData = data.filter(member =>
+                    member.toLowerCase().startsWith(filterValue) // Vérifie si le nom commence par l'input
+                );
 
-                let input = document.createElement("input");
-                let label = document.createElement("label");
+                if (filteredData.length === 0) {
+                    membersList.innerHTML = `<li class="list-group-item text-danger">Aucun membre trouvé</li>`;
+                } else {
+                    filteredData.forEach(member => {
+                        let li = document.createElement("li");
+                        li.classList.add("list-group-item", "d-flex", "align-items-center");
 
-                input.id = member;
-                input.type = "checkbox";
-                input.value = member;
-                input.classList.add("form-check-input", "me-2", "member-checkbox");
+                        let div = document.createElement("div");
+                        div.classList.add("form-check");
 
-                label.htmlFor = member;
-                label.textContent = member;
-                label.classList.add("form-check-label");
+                        let input = document.createElement("input");
+                        let label = document.createElement("label");
 
-                div.appendChild(input);
-                div.appendChild(label);
-                li.appendChild(div);
-                membersList.appendChild(li);
+                        input.id = member;
+                        input.type = "checkbox";
+                        input.value = member;
+                        input.classList.add("form-check-input", "me-2", "member-checkbox");
+
+                        label.setAttribute("for", member); // Associe correctement le label
+                        label.textContent = member;
+                        label.classList.add("form-check-label");
+
+                        div.appendChild(input);
+                        div.appendChild(label);
+                        li.appendChild(div);
+                        membersList.appendChild(li);
+
+                        // Correction : Permet au label de fonctionner normalement
+                        label.addEventListener("click", (event) => {
+                            event.stopPropagation(); // Empêche l'écouteur de <li> de prendre le dessus
+                        });
+                    });
+                }
+            }
+
+            // Affiche la liste initiale
+            updateList();
+
+            // Écouteur pour filtrer la liste dynamiquement
+            filterInput.addEventListener("input", updateList);
+
+            // Ajoute un gestionnaire pour rendre toute la ligne cliquable
+            membersList.addEventListener("click", (event) => {
+                let li = event.target.closest(".list-group-item");
+                if (!li) return;
+
+                let checkbox = li.querySelector(".member-checkbox");
+                if (checkbox && event.target !== checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                }
             });
         })
         .catch(error => logError("getMembers", error));
 }
+
 
 // Récupère la liste des présences
 function getPresence() {
@@ -164,7 +206,7 @@ submitButton.addEventListener("click", () => {
 
 // Supprime les membres sélectionnés
 deleteMemberButton.addEventListener("click", () => {
-    if (!window.confirm("Voulez-vous vraiment supprimer les membres sélectionnés ?")) return;
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce membre ?")) return;
 
     const checked = document.querySelectorAll(".member-checkbox:checked");
     if (checked.length === 0) {
@@ -280,3 +322,5 @@ RestoreMemberButton.addEventListener("click", () => {
     })
     .catch(error => logError("restoreMembers", error));
 });
+
+
