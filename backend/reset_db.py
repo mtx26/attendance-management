@@ -1,6 +1,6 @@
 import sqlite3
 
-DB_PATH = "../database.db"
+DB_PATH = "database.db"
 
 def reset_presences():
     conn = sqlite3.connect(DB_PATH)
