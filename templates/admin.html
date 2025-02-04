@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Administration - Club Clermont{% endblock %}
+
+{% block content %}
+
+        <!-- Section Admin (affichée uniquement si Admin) -->
+        <div class="row container-index col-md-10 offset-md-1">
+            <div class="bg-light p-4 shadow rounded">
+                <h1 class="text-danger">Admin <span class="badge bg-warning">Privé</span></h1>
+                <a href="/register" class="btn btn-secondary my-2 w-100">
+                    <i class="fas fa-user-plus"></i> Inscrire un nouvel administrateur
+                </a>
+
+                <div class="mt-4">
+                    <h2 class="text-secondary">Historique des membres supprimés</h2>
+                    <div class="scrollable-list">
+                        <ul id="delete-members-list" class="list-group grid-list"></ul>
+                    </div>
+                    <button id="restore-member-button" class="btn btn-success mt-2">
+                        <i class="fas fa-undo"></i> Restaurer
+                    </button>
+                </div>
+            </div>
+        </div>
+        <script src="/static/script/admin.js"></script>
+
+
+{% endblock %}

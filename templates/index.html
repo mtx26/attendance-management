@@ -6,7 +6,7 @@
 
     <div class="row container-index">
         <!-- Gestion des membres -->
-        <div class="{% if 'user' in session and session['is_admin'] %}col-md-8{% else %}col-md-10 offset-md-1{% endif %}">
+        <div class="col-md-10 offset-md-1">
             <div class="bg-white p-4 shadow rounded">
                 <h1 class="text-primary mb-3">Gestion des membres du club</h1>
 
@@ -47,10 +47,10 @@
                 
 
                 <div class="d-flex flex-wrap gap-2">
-                    <button id="submit-button" class="btn btn-secondary">
+                    <button id="submit-button" class="btn btn-secondary flex-fill">
                         <i class="fas fa-check-circle"></i> Confirmer ma présence
                     </button>
-                    <button id="delete-member-button" class="btn btn-danger">
+                    <button id="delete-member-button" class="btn btn-danger flex-fill">
                         <i class="fas fa-trash"></i> Supprimer le membre sélectionné
                     </button>
                 </div>
@@ -66,28 +66,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Section Admin (affichée uniquement si Admin) -->
-        {% if "user" in session and session["is_admin"] %}
-            <div class="col-md-4 mt-3 mt-md-0">
-                <div class="bg-light p-4 shadow rounded">
-                    <h1 class="text-danger">Admin <span class="badge bg-warning">Privé</span></h1>
-                    <a href="/register" class="btn btn-secondary my-2 w-100">
-                        <i class="fas fa-user-plus"></i> Inscrire un nouvel administrateur
-                    </a>
-
-                    <div class="mt-4">
-                        <h2 class="text-secondary">Historique des membres supprimés</h2>
-                        <div class="scrollable-list">
-                            <ul id="delete-members-list" class="list-group grid-list"></ul>
-                        </div>
-                        <button id="restore-member-button" class="btn btn-success mt-2">
-                            <i class="fas fa-undo"></i> Restaurer
-                        </button>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
     </div>
+    <script src="/static/script/index.js"></script>
 
 {% endblock %}
