@@ -30,12 +30,23 @@ function getMembers() {
             const membersList = document.getElementById("members-list");
             const filterInput = document.getElementById("filter-name");
 
+            const checkedMembers = new Set();
+
             function updateList() {
-                const filterValue = filterInput.value.toLowerCase(); // Récupère la valeur en minuscules
+                const filterValue = filterInput.value.toLowerCase();
+
+                document.querySelectorAll(".member-checkbox").forEach(checkbox => {
+                    if (checkbox.checked) {
+                        checkedMembers.add(checkbox.value);
+                    } else {
+                        checkedMembers.delete(checkbox.value);
+                    }
+                });
+
                 membersList.innerHTML = "";
 
                 const filteredData = data.filter(member =>
-                    member.toLowerCase().startsWith(filterValue) // Vérifie si le nom commence par l'input
+                    member.toLowerCase().startsWith(filterValue)
                 );
 
                 if (filteredData.length === 0) {
@@ -43,56 +54,33 @@ function getMembers() {
                 } else {
                     filteredData.forEach(member => {
                         let li = document.createElement("li");
-                        li.classList.add("list-group-item", "d-flex", "align-items-center");
+                        li.classList.add("list-group-item", "d-flex", "align-items-center", "clickable-item");
 
-                        let div = document.createElement("div");
-                        div.classList.add("form-check");
+                        let label = document.createElement("label");
+                        label.classList.add("w-100", "d-flex");
+                        label.setAttribute("for", `member-${member}`);
 
                         let input = document.createElement("input");
-                        let label = document.createElement("label");
-
-                        input.id = member;
+                        input.id = `member-${member}`;
                         input.type = "checkbox";
                         input.value = member;
                         input.classList.add("form-check-input", "me-2", "member-checkbox");
 
-                        label.setAttribute("for", member); // Associe correctement le label
-                        label.textContent = member;
-                        label.classList.add("form-check-label");
+                        input.checked = checkedMembers.has(member);
 
-                        div.appendChild(input);
-                        div.appendChild(label);
-                        li.appendChild(div);
+                        label.appendChild(input);
+                        label.append(member);
+                        li.appendChild(label);
                         membersList.appendChild(li);
-
-                        // Correction : Permet au label de fonctionner normalement
-                        label.addEventListener("click", (event) => {
-                            event.stopPropagation(); // Empêche l'écouteur de <li> de prendre le dessus
-                        });
                     });
                 }
             }
 
-            // Affiche la liste initiale
             updateList();
-
-            // Écouteur pour filtrer la liste dynamiquement
             filterInput.addEventListener("input", updateList);
-
-            // Ajoute un gestionnaire pour rendre toute la ligne cliquable
-            membersList.addEventListener("click", (event) => {
-                let li = event.target.closest(".list-group-item");
-                if (!li) return;
-
-                let checkbox = li.querySelector(".member-checkbox");
-                if (checkbox && event.target !== checkbox) {
-                    checkbox.checked = !checkbox.checked;
-                }
-            });
         })
         .catch(error => logError("getMembers", error));
 }
-
 
 // Récupère la liste des présences
 function getPresence() {
@@ -109,25 +97,20 @@ function getPresence() {
             data.forEach(member => {
                 let li = document.createElement("li");
                 li.classList.add("list-group-item", "d-flex", "align-items-center");
-
-                let div = document.createElement("div");
-                div.classList.add("form-check");
-
-                let input = document.createElement("input");
+            
                 let label = document.createElement("label");
-
-                input.id = member + "-presence";
+                label.classList.add("w-100", "d-flex", "align-items-center"); // Permet un clic global
+                label.setAttribute("for", `${member}-presence`);
+            
+                let input = document.createElement("input");
+                input.id = `${member}-presence`;
                 input.type = "checkbox";
                 input.value = member;
                 input.classList.add("form-check-input", "me-2", "presence-checkbox");
-
-                label.htmlFor = member + "-presence";
-                label.textContent = member;
-                label.classList.add("form-check-label");
-
-                div.appendChild(input);
-                div.appendChild(label);
-                li.appendChild(div);
+            
+                label.appendChild(input);
+                label.append(member);
+                li.appendChild(label);
                 presenceList.appendChild(li);
             });
         })
@@ -185,6 +168,9 @@ submitButton.addEventListener("click", () => {
     })
         .then(response => response.json())
         .then(data => {
+            document.querySelectorAll(".member-checkbox").forEach(checkbox => {
+                checkbox.checked = false;
+            }); 
             logSuccess("Ajout de présences", data);
             getPresence();
         })
@@ -256,26 +242,23 @@ function getDeletedMembers() {
             data.forEach(member => {
                 let li = document.createElement("li");
                 li.classList.add("list-group-item", "d-flex", "align-items-center");
-
-                let div = document.createElement("div");
-                div.classList.add("form-check");
-
+            
+                let label = document.createElement("label");
+                label.classList.add("w-100", "d-flex", "align-items-center");
+                label.setAttribute("for", `${member}-delete`);
+            
                 let input = document.createElement("input");
-                input.id = member + "-delete";
+                input.id = `${member}-delete`;
                 input.type = "checkbox";
                 input.value = member;
                 input.classList.add("form-check-input", "me-2", "delete-checkbox");
-
-                let label = document.createElement("label");
-                label.htmlFor = member + "-delete";
-                label.textContent = member;
-                label.classList.add("form-check-label");
-
-                div.appendChild(input);
-                div.appendChild(label);
-                li.appendChild(div);
+            
+                label.appendChild(input);
+                label.append(member);
+                li.appendChild(label);
                 deleteMembersList.appendChild(li);
             });
+            
         })
         .catch(error => logError("getDeletedMembers", error));
 }
