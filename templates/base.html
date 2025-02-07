@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/static/style.css">
 </head>
-<body class="bg-light">
-    
+<body class="bg-light d-flex flex-column min-vh-100">
 
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">🏠 Accueil</a>
@@ -20,7 +20,7 @@
             {% if "user" in session and session["is_admin"] %}
             <a class="navbar-brand d-none d-lg-block" href="/admin">⛔ Administration</a>
             {% endif %}
-    
+
             <!-- Zone de droite -->
             <div class="d-none d-lg-flex align-items-center ms-auto">
                 {% if "user" in session %}
@@ -32,15 +32,15 @@
                     <a href="/login" class="btn btn-primary">Se connecter</a>
                 {% endif %}
             </div>
-    
-            <!-- Bouton Offcanvas visible uniquement sur mobile -->
+
+            <!-- Bouton Offcanvas pour mobile -->
             <button class="navbar-toggler d-lg-none ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvas" aria-controls="navbarOffcanvas">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
     </nav>
-    
-    <!-- Offcanvas pour mobile -->
+
+    <!-- Offcanvas Mobile Menu -->
     <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="navbarOffcanvas" aria-labelledby="navbarOffcanvasLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="navbarOffcanvasLabel">Menu</h5>
@@ -75,14 +75,35 @@
             </ul>
         </div>
     </div>
-    
 
-    <!-- Contenu des pages -->
-    <div class="container py-3">
+    <!-- Contenu principal -->
+    <div class="container flex-grow-1 py-4">
         {% block content %}{% endblock %}
     </div>
 
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <div class="container">
+            <p class="mb-1">&copy; 2025 mtx_26 - Tous droits réservés.</p>
+            <p class="mb-1">Ce site est un projet personnel et n'a aucun lien officiel avec [Nom du club].</p>
+            <p class="mb-2">Les données collectées sont uniquement utilisées pour l'affichage des présences.</p>
+            <nav class="mb-2">
+                <a href="/" class="text-white me-3">Accueil</a> 
+                <a href="/birthdays" class="text-white me-3">Anniversaires</a>
+                {% if "user" in session and session["is_admin"] %}
+                <a href="/admin" class="text-white">Administration</a>
+                {% endif %}
+            </nav>
+            <p class="small">
+                <a href="mailto:mtx_26@outlook.be" class="text-white me-3">Contact</a> 
+                <a href="https://github.com/mtx26/Changelog-generator/blob/php/LICENSE" class="text-white" target="_blank">Licence MIT</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="static/script/script.js"></script>
+    <script src="/static/script/script.js"></script>
+
 </body>
 </html>
